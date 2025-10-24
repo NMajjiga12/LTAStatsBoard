@@ -1,4 +1,4 @@
-# SpeedStatsBoard Application
+# LTAStatsBoard Application
 
 ## Overview
 
