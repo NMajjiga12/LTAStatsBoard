@@ -2,12 +2,11 @@
 
 ## Overview
 
-**SpeedStatsBoard** is a React-based web application designed specifically for **speedrunners hosting their own Live Time Attack events**.  
-It provides an easy way to **manage, track, and display runner times** during live competitions — all from a browser-based interface.  
+**SpeedStatsBoard** is a React-based web application designed specifically for **speedrunners hosting their own Live Time Attack events**. It provides an easy way to **manage, track, and display runner times** during live competitions — all from a browser-based interface.  
 
-The app supports **manual time entry**, **real-time leaderboard updates**, and **OBS integration** for seamless live streaming overlays.  
-Whether you're managing a casual race or a large-scale time attack event, this tool ensures every runner’s performance is accurately tracked and displayed.
+The app supports **manual time entry**, **real-time leaderboard updates**, and **OBS integration** for seamless live streaming overlays. Whether you're managing a casual race or a large-scale time attack event, this tool ensures every runner’s performance is accurately tracked and displayed.
 
+NOTE: This Application is not for public use. You must download/clone this and deploy this JS application yourself!
 ---
 
 ## Installation Instructions
