@@ -1,12 +1,13 @@
-# LTAStatsBoard Application
+# SpeedStatsBoard Application
 
 ## Overview
 
-**SpeedStatsBoard** is a React-based web application designed specifically for **speedrunners hosting their own Live Time Attack events**. It provides an easy way to **manage, track, and display runner times** during live competitions — all from a browser-based interface.  
+**SpeedStatsBoard** is a React-based web application designed specifically for **speedrunners hosting their own Live Time Attack events**.  
+It provides an easy way to **manage, track, and display runner times** during live competitions — all from a browser-based interface.  
 
-The app supports **manual time entry**, **real-time leaderboard updates**, and **OBS integration** for seamless live streaming overlays. Whether you're managing a casual race or a large-scale time attack event, this tool ensures every runner’s performance is accurately tracked and displayed.
+The app supports **manual time entry**, **real-time leaderboard updates**, and **OBS integration** for seamless live streaming overlays.  
+Whether you're managing a casual race or a large-scale time attack event, this tool ensures every runner’s performance is accurately tracked and displayed.
 
-NOTE: This Application is not for public use. You must download/clone this and deploy this JS application yourself!
 ---
 
 ## Installation Instructions
@@ -86,7 +87,7 @@ The production build is minified, versioned, and ready for deployment.
 
 ---
 
-### Record Finish Times
+### ⏱️ Record Finish Times
 - When a runner finishes, **manually enter their time** in the format:
   ```
   HH:MM:SS.MMM
@@ -145,12 +146,15 @@ npm audit fix --force # To fix any other vulnerabilities if needed (NOT REQUIRED
 ---
 
 ### 3. Port Already in Use
-If port `5000` is occupied, the terminal will ask if you’d like to use another port — choose **Y** to continue.
+If port `3000` is occupied, the terminal will ask if you’d like to use another port — choose **Y** to continue.
 
 ---
 
-## Credits
-- GSA and CCG for inspiration for making LTA tools such as this
-- TheRun.gg API for their simple and convenient use for scraping runner information
-- NodeCG's speedcontrol application for giving me inspiration for making my own dashboard similar to theirs
-- Programming was all done by GhostTSR [Any Issues Contact me through Discord: @ghosttsr] 
+## 🏁 Summary
+
+**Time Attack** simplifies live event management for speedrunners by:
+- Providing quick manual entry for up to **7 runners**
+- Enabling **real-time leaderboard updates**
+- Offering **OBS-ready overlays** for seamless broadcasting
+
+Perfect for streamers, event organizers, or community hosts looking to bring structure and clarity to live races.

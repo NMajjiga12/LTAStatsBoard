@@ -1,3 +1,4 @@
+// src/server/routes/runners.js
 const express = require('express');
 const fs = require('fs').promises;
 const path = require('path');
@@ -35,10 +36,10 @@ const timeStringToMs = (timeString) => {
     
     if (!match) return Infinity;
     
-    const hours = parseInt(match[1]);
-    const minutes = parseInt(match[2]);
-    const seconds = parseInt(match[3]);
-    const milliseconds = parseInt(match[4]);
+    const hours = parseInt(match[1], 10);
+    const minutes = parseInt(match[2], 10);
+    const seconds = parseInt(match[3], 10);
+    const milliseconds = parseInt(match[4], 10);
     
     return (hours * 3600000) + (minutes * 60000) + (seconds * 1000) + milliseconds;
   } catch {

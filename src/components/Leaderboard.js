@@ -1,35 +1,9 @@
+// src/components/Leaderboard.js
 import React from 'react';
+import { formatTimeForDisplay } from '../utils/timeFormat';
 
 const Leaderboard = ({ leaderboardData }) => {
-  const formatTimeForDisplay = (timeString) => {
-    if (!timeString) return 'No time';
-    
-    const pattern = /^(\d{1,2}):([0-5]\d):([0-5]\d)\.(\d{3})$/;
-    const match = timeString.match(pattern);
-    
-    if (!match) return timeString;
-    
-    let hours = parseInt(match[1]);
-    let minutes = parseInt(match[2]);
-    let seconds = parseInt(match[3]);
-    const milliseconds = match[4];
-    
-    let result = '';
-    
-    if (hours > 0) {
-      result += hours + ':';
-      result += minutes.toString().padStart(2, '0') + ':';
-      result += seconds.toString().padStart(2, '0') + '.';
-    } else if (minutes > 0) {
-      result += minutes + ':';
-      result += seconds.toString().padStart(2, '0') + '.';
-    } else {
-      result += seconds + '.';
-    }
-    
-    result += milliseconds;
-    return result;
-  };
+  // Use the imported formatTimeForDisplay function
 
   return (
     <div className="tab-content" id="leaderboardContent">
