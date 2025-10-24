@@ -86,7 +86,7 @@ The production build is minified, versioned, and ready for deployment.
 
 ---
 
-### ⏱️ Record Finish Times
+### Record Finish Times
 - When a runner finishes, **manually enter their time** in the format:
   ```
   HH:MM:SS.MMM
