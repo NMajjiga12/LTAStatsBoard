@@ -2,7 +2,7 @@
 
 ## Overview
 
-**SpeedStatsBoard** is a React-based web application designed specifically for **speedrunners hosting their own Live Time Attack events**.  
+**LTAStatsBoard** is a React-based web application designed specifically for **speedrunners hosting their own Live Time Attack events**.  
 It provides an easy way to **manage, track, and display runner times** during live competitions — all from a browser-based interface.  
 
 The app supports **manual time entry**, **real-time leaderboard updates**, and **OBS integration** for seamless live streaming overlays.  
