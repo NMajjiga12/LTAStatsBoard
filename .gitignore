@@ -156,5 +156,5 @@ vite.config.js.timestamp-*
 vite.config.ts.timestamp-*
 
 # External files
-package-lock.json
 runner_data.json
+commentator_data.json
