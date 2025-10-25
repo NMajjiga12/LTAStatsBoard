@@ -104,21 +104,6 @@ const FontSettings = ({ fontSettings, onFontChange, onResetFonts, fontLoading = 
     }
   };
 
-  const previewStyle = (fontFamily, color) => ({
-    fontFamily: fontFamily,
-    fontSize: '18px',
-    padding: '10px',
-    backgroundColor: '#1a1a1a',
-    color: color,
-    borderRadius: '5px',
-    border: '1px solid #333',
-    minHeight: '50px',
-    display: 'flex',
-    alignItems: 'center',
-    justifyContent: 'center',
-    transition: 'all 0.3s ease'
-  });
-
   // Validate hex color
   const isValidHexColor = (color) => {
     return /^#([A-Fa-f0-9]{6}|[A-Fa-f0-9]{3})$/.test(color);
@@ -211,15 +196,6 @@ const FontSettings = ({ fontSettings, onFontChange, onResetFonts, fontLoading = 
                       </div>
                     )}
                   </div>
-
-                  <div className="mt-4">
-                    <label className="form-label fw-bold">Preview</label>
-                    <div style={previewStyle(localSettings.obsRunnerFont, localSettings.obsRunnerColor)} className="font-preview">
-                      Twitch: RunnerName<br />
-                      Current Split: Split 3<br />
-                      PB Delta: -00:12.45
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -287,15 +263,6 @@ const FontSettings = ({ fontSettings, onFontChange, onResetFonts, fontLoading = 
                       </div>
                     )}
                   </div>
-
-                  <div className="mt-4">
-                    <label className="form-label fw-bold">Preview</label>
-                    <div style={previewStyle(localSettings.obsLeaderboardFont, localSettings.obsLeaderboardColor)} className="font-preview">
-                      1. Player One - 00:47:12.563<br />
-                      2. Player Two - 00:48:23.123<br />
-                      3. Player Three - 00:49:34.456
-                    </div>
-                  </div>
                 </div>
               </div>
             </div>
@@ -316,7 +283,7 @@ const FontSettings = ({ fontSettings, onFontChange, onResetFonts, fontLoading = 
                       <li>Changes are automatically saved and persist across browser sessions</li>
                       <li>For best results in OBS, use colors with good contrast against your background</li>
                       <li>Save each section individually using the respective save button</li>
-                      <li>Use "Reset All" to restore default settings for both sections</li>
+                      <li>Changes will be visible in your OBS browser sources after saving + peloading the page</li>
                     </ul>
                   </div>
                 </div>
