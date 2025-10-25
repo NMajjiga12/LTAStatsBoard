@@ -1,3 +1,4 @@
+// src/components/Dashboard.js
 import React from 'react';
 import RunnerManagement from './RunnerManagement';
 import OBSLinks from './OBSLinks';
@@ -56,7 +57,7 @@ const Dashboard = ({
                   className={`btn btn-outline-light ${activeTab === 'fonts' ? 'active' : ''}`}
                   onClick={() => onTabChange('fonts')}
                 >
-                  <i className="fas fa-font me-1"></i> Fonts
+                  <i className="fas fa-palette me-1"></i> Display Settings
                   {fontLoading && <span className="ms-1 spinner-border spinner-border-sm" />}
                 </button>
               </div>

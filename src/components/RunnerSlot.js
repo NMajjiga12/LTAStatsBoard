@@ -1,4 +1,6 @@
+// src/components/RunnerSlot.js
 import React, { useState, useEffect } from 'react';
+import { formatTimeForDisplay } from '../utils/timeFormat';
 
 const RunnerSlot = ({ runner, slot, onSave, onClear }) => {
   const [name, setName] = useState(runner.name || '');
@@ -25,10 +27,10 @@ const RunnerSlot = ({ runner, slot, onSave, onClear }) => {
     
     if (!match) return false;
     
-    const hours = parseInt(match[1]);
-    const minutes = parseInt(match[2]);
-    const seconds = parseInt(match[3]);
-    const milliseconds = parseInt(match[4]);
+    const hours = parseInt(match[1], 10);
+    const minutes = parseInt(match[2], 10);
+    const seconds = parseInt(match[3], 10);
+    const milliseconds = parseInt(match[4], 10);
     
     // Validate ranges
     if (hours < 0 || hours > 99) return false;
@@ -99,7 +101,7 @@ const RunnerSlot = ({ runner, slot, onSave, onClear }) => {
           {/* Runner Name */}
           <div className="col-md-3">
             <div className="mb-3">
-              <label className="form-label fw-bold" style={{color: '#ffffff'}}>Runner Name</label>
+              <label className="form-label fw-bold">Runner Name</label>
               <input 
                 type="text" 
                 className={`form-control runner-name-input ${getFieldClass('name')}`}
@@ -114,7 +116,7 @@ const RunnerSlot = ({ runner, slot, onSave, onClear }) => {
           {/* therun.gg Username */}
           <div className="col-md-3">
             <div className="mb-3">
-              <label className="form-label fw-bold" style={{color: '#ffffff'}}>therun.gg Username</label>
+              <label className="form-label fw-bold">therun.gg Username</label>
               <input 
                 type="text" 
                 className={`form-control therun-username-input ${getFieldClass('username')}`}
@@ -126,10 +128,10 @@ const RunnerSlot = ({ runner, slot, onSave, onClear }) => {
             </div>
           </div>
           
-          {/* Time Input */}
+          {/* Event Personal Best */}
           <div className="col-md-3">
             <div className="mb-3">
-              <label className="form-label fw-bold" style={{color: '#ffffff'}}>Time (HH:MM:SS.MMM)</label>
+              <label className="form-label fw-bold">Event Personal Best</label>
               <input 
                 type="text" 
                 className={`form-control time-input ${getFieldClass('time')} ${getTimeInputClass()}`}

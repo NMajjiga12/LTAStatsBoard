@@ -1,3 +1,4 @@
+// src/App.js
 import React, { useState, useEffect, useCallback } from 'react';
 import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-router-dom';
 import Dashboard from './components/Dashboard';
@@ -13,7 +14,7 @@ const FontService = {
       setTimeout(() => {
         localStorage.setItem('fontSettings', JSON.stringify(fontSettings));
         resolve({ success: true });
-      }, 100); // Simulate async operation
+      }, 100);
     });
   },
 
@@ -21,7 +22,24 @@ const FontService = {
     return new Promise((resolve) => {
       setTimeout(() => {
         const savedFonts = localStorage.getItem('fontSettings');
-        resolve(savedFonts ? JSON.parse(savedFonts) : null);
+        if (savedFonts) {
+          const parsed = JSON.parse(savedFonts);
+          // Ensure all settings exist with defaults
+          resolve({
+            obsRunnerFont: parsed.obsRunnerFont || 'Verdana, sans-serif',
+            obsLeaderboardFont: parsed.obsLeaderboardFont || 'Verdana, sans-serif',
+            obsRunnerColor: parsed.obsRunnerColor || '#ffffff',
+            obsLeaderboardColor: parsed.obsLeaderboardColor || '#ffffff'
+          });
+        } else {
+          // Return default settings if nothing is saved
+          resolve({
+            obsRunnerFont: 'Verdana, sans-serif',
+            obsLeaderboardFont: 'Verdana, sans-serif',
+            obsRunnerColor: '#ffffff',
+            obsLeaderboardColor: '#ffffff'
+          });
+        }
       }, 100);
     });
   }
@@ -36,7 +54,9 @@ function AppContent() {
   const [isLoading, setIsLoading] = useState(true);
   const [fontSettings, setFontSettings] = useState({
     obsRunnerFont: 'Verdana, sans-serif',
-    obsLeaderboardFont: 'Verdana, sans-serif'
+    obsLeaderboardFont: 'Verdana, sans-serif',
+    obsRunnerColor: '#ffffff',
+    obsLeaderboardColor: '#ffffff'
   });
   const [fontLoading, setFontLoading] = useState(false);
 
@@ -49,9 +69,7 @@ function AppContent() {
       setFontLoading(true);
       try {
         const savedFonts = await FontService.loadFontSettings();
-        if (savedFonts) {
-          setFontSettings(savedFonts);
-        }
+        setFontSettings(savedFonts);
       } catch (error) {
         console.error('Failed to load font settings:', error);
       } finally {
@@ -65,7 +83,7 @@ function AppContent() {
   // Save font settings asynchronously when they change
   useEffect(() => {
     const saveFonts = async () => {
-      if (fontLoading) return; // Don't save while loading
+      if (fontLoading) return;
       
       try {
         await FontService.saveFontSettings(fontSettings);
@@ -102,11 +120,9 @@ function AppContent() {
       setIsLoading(true);
       const runners = await getRunners();
       
-      // If no data returned from server, initialize with default runners
       if (!runners || runners.length === 0) {
         const defaultRunners = initializeDefaultRunners();
         setRunnerData(defaultRunners);
-        // Save the default runners to the server
         await saveRunners(defaultRunners);
       } else {
         setRunnerData(runners);
@@ -115,7 +131,6 @@ function AppContent() {
       await updateLeaderboard();
     } catch (error) {
       console.error('Failed to load data:', error);
-      // Initialize with default runners if API fails
       const defaultRunners = initializeDefaultRunners();
       setRunnerData(defaultRunners);
     } finally {
@@ -124,7 +139,6 @@ function AppContent() {
   }, [initializeDefaultRunners, updateLeaderboard]);
 
   useEffect(() => {
-    // Only load dashboard data if we're not on an OBS route
     if (!isOBSRoute) {
       loadData();
     }
@@ -160,38 +174,43 @@ function AppContent() {
     }
   };
 
-  const handleFontChange = async (component, font) => {
-    setFontSettings(prev => ({
-      ...prev,
-      [component]: font
+  const handleFontChange = useCallback(async (component, value) => {
+    setFontSettings(prevSettings => ({
+      ...prevSettings,
+      [component]: value
     }));
-  };
+  }, []);
 
-  const resetFonts = async () => {
-    const defaultFonts = {
+  const resetFonts = useCallback(async () => {
+    const defaultSettings = {
       obsRunnerFont: 'Verdana, sans-serif',
-      obsLeaderboardFont: 'Verdana, sans-serif'
+      obsLeaderboardFont: 'Verdana, sans-serif',
+      obsRunnerColor: '#ffffff',
+      obsLeaderboardColor: '#ffffff'
     };
-    setFontSettings(defaultFonts);
-    
-    try {
-      await FontService.saveFontSettings(defaultFonts);
-    } catch (error) {
-      console.error('Failed to reset fonts:', error);
-    }
-  };
+    setFontSettings(defaultSettings);
+  }, []);
 
   // Render OBS routes
   if (isOBSRoute) {
     return (
       <Routes>
-        <Route path="/obs_leaderboard" element={<OBSLeaderboard fontFamily={fontSettings.obsLeaderboardFont} />} />
-        <Route path="/obs/:username" element={<OBSRunnerWrapper fontFamily={fontSettings.obsRunnerFont} />} />
+        <Route path="/obs_leaderboard" element={
+          <OBSLeaderboard 
+            fontFamily={fontSettings.obsLeaderboardFont} 
+            textColor={fontSettings.obsLeaderboardColor}
+          />
+        } />
+        <Route path="/obs/:username" element={
+          <OBSRunnerWrapper 
+            fontFamily={fontSettings.obsRunnerFont} 
+            textColor={fontSettings.obsRunnerColor}
+          />
+        } />
       </Routes>
     );
   }
 
-  // Render dashboard for loading state
   if (isLoading) {
     return (
       <div className="App">
@@ -214,7 +233,6 @@ function AppContent() {
     );
   }
 
-  // Render main dashboard
   return (
     <div className="App">
       <Dashboard
@@ -235,11 +253,11 @@ function AppContent() {
 }
 
 // Wrapper component to extract username from URL params for OBSRunner
-function OBSRunnerWrapper({ fontFamily }) {
+function OBSRunnerWrapper({ fontFamily, textColor }) {
   const location = useLocation();
   const username = location.pathname.split('/').pop();
   
-  return <OBSRunner username={username} fontFamily={fontFamily} />;
+  return <OBSRunner username={username} fontFamily={fontFamily} textColor={textColor} />;
 }
 
 // Main App component with Router

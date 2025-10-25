@@ -1,39 +1,11 @@
+// src/components/OBSLeaderboard.js
 import React, { useState, useEffect } from 'react';
+import { formatTimeForDisplay } from '../utils/timeFormat';
 
-const OBSLeaderboard = ({ fontFamily = 'Verdana, sans-serif' }) => {
+const OBSLeaderboard = ({ fontFamily = 'Verdana, sans-serif', textColor = '#ffffff' }) => {
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  const formatTimeForDisplay = (timeString) => {
-    if (!timeString) return 'No Time';
-    
-    const pattern = /^(\d{1,2}):([0-5]\d):([0-5]\d)\.(\d{3})$/;
-    const match = timeString.match(pattern);
-    
-    if (!match) return timeString;
-    
-    let hours = parseInt(match[1]);
-    let minutes = parseInt(match[2]);
-    let seconds = parseInt(match[3]);
-    const milliseconds = match[4];
-    
-    let result = '';
-    
-    if (hours > 0) {
-      result += hours + ':';
-      result += minutes.toString().padStart(2, '0') + ':';
-      result += seconds.toString().padStart(2, '0') + '.';
-    } else if (minutes > 0) {
-      result += minutes + ':';
-      result += seconds.toString().padStart(2, '0') + '.';
-    } else {
-      result += seconds + '.';
-    }
-    
-    result += milliseconds;
-    return result;
-  };
 
   const fetchLeaderboardData = async () => {
     try {
@@ -67,7 +39,7 @@ const OBSLeaderboard = ({ fontFamily = 'Verdana, sans-serif' }) => {
   const containerStyle = {
     fontFamily: fontFamily,
     fontSize: '16px',
-    color: '#ffffff',
+    color: textColor,
     backgroundColor: 'rgba(0, 0, 0, 0.0)',
     width: '100vw',
     height: '100vh',
@@ -78,10 +50,15 @@ const OBSLeaderboard = ({ fontFamily = 'Verdana, sans-serif' }) => {
     left: 0
   };
 
+  const positionStyle = {
+    fontFamily: fontFamily,
+    color: textColor
+  };
+
   if (loading) {
     return (
       <div style={containerStyle}>
-        <div className="leaderboard loading" style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%'}}>
+        <div className="leaderboard loading" style={{...positionStyle, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%'}}>
           Loading leaderboard...
         </div>
       </div>
@@ -91,7 +68,7 @@ const OBSLeaderboard = ({ fontFamily = 'Verdana, sans-serif' }) => {
   if (error) {
     return (
       <div style={containerStyle}>
-        <div className="leaderboard error" style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%'}}>
+        <div className="leaderboard error" style={{...positionStyle, display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%'}}>
           {error}
         </div>
       </div>
@@ -103,20 +80,19 @@ const OBSLeaderboard = ({ fontFamily = 'Verdana, sans-serif' }) => {
       <div className="leaderboard">
         {leaderboardData.length === 0 ? (
           <div className="position" style={{display: 'flex', alignItems: 'center', justifyContent: 'center', height: '100%'}}>
-            <div className="placement-name">No runners with names entered</div>
+            <div className="placement-name" style={positionStyle}>No runners with names entered</div>
           </div>
         ) : (
           leaderboardData.map((runner, index) => {
             const formattedTime = formatTimeForDisplay(runner.time);
-            // Display runner name exactly as entered
             const displayName = runner.name;
             
             return (
-              <div key={index} className="position">
-                <div className="placement-name">
+              <div key={index} className="position" style={positionStyle}>
+                <div className="placement-name" style={positionStyle}>
                   {index + 1}. {displayName}
                 </div>
-                <div className={`perf-time ${!runner.validTime ? 'no-time' : ''}`}>
+                <div className={`perf-time ${!runner.validTime ? 'no-time' : ''}`} style={positionStyle}>
                   {formattedTime || 'No Time'}
                 </div>
               </div>

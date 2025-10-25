@@ -1,6 +1,7 @@
+// src/components/OBSRunner.js
 import React, { useState, useEffect } from 'react';
 
-const OBSRunner = ({ username, fontFamily = 'Verdana, sans-serif' }) => {
+const OBSRunner = ({ username, fontFamily = 'Verdana, sans-serif', textColor = '#ffffff' }) => {
   const [runnerData, setRunnerData] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -134,8 +135,8 @@ const OBSRunner = ({ username, fontFamily = 'Verdana, sans-serif' }) => {
   const containerStyle = {
     fontFamily: fontFamily,
     fontSize: '16px',
-    color: '#ffffff',
-    backgroundColor: '#000000',
+    color: textColor,
+    backgroundColor: 'rgba(0, 0, 0, 1.0)',
     width: '100vw',
     height: '100vh',
     margin: 0,
@@ -148,10 +149,15 @@ const OBSRunner = ({ username, fontFamily = 'Verdana, sans-serif' }) => {
     justifyContent: 'center'
   };
 
+  const textStyle = {
+    fontFamily: fontFamily,
+    color: textColor
+  };
+
   if (loading) {
     return (
       <div style={containerStyle}>
-        <div className="runner-container loading">
+        <div className="runner-container loading" style={textStyle}>
           Loading data for {actualUsername || username}...
         </div>
       </div>
@@ -161,7 +167,7 @@ const OBSRunner = ({ username, fontFamily = 'Verdana, sans-serif' }) => {
   if (error) {
     return (
       <div style={containerStyle}>
-        <div className="runner-container error">
+        <div className="runner-container error" style={textStyle}>
           {error}
         </div>
       </div>
@@ -171,7 +177,7 @@ const OBSRunner = ({ username, fontFamily = 'Verdana, sans-serif' }) => {
   if (!runnerData) {
     return (
       <div style={containerStyle}>
-        <div className="runner-container error">
+        <div className="runner-container error" style={textStyle}>
           No runner data available
         </div>
       </div>
@@ -184,7 +190,7 @@ const OBSRunner = ({ username, fontFamily = 'Verdana, sans-serif' }) => {
   return (
     <div style={containerStyle}>
       <div className="runner-container">
-        <div className="runner-stats">
+        <div className="runner-stats" style={textStyle}>
           <div><span className="label">Twitch:</span> {runnerData.login}</div>
           <div><span className="label">Current Split:</span> {splitDisplay}</div>
           <div className={deltaClass}><span className="label">PB Delta:</span> {formatDelta(runnerData.delta)}</div>

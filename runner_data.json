@@ -1,14 +1,14 @@
 [
   {
     "id": 1,
-    "name": "",
-    "therunUsername": "",
-    "time": "",
-    "validTime": false
+    "name": "Runner 1",
+    "therunUsername": "markg_94",
+    "time": "00:09:30.000",
+    "validTime": true
   },
   {
     "id": 2,
-    "name": "Runner2",
+    "name": "",
     "therunUsername": "",
     "time": "",
     "validTime": false

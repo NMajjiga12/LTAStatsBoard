@@ -429,7 +429,7 @@ body {
     align-items: center;
     justify-content: center;
     overflow: hidden;
-    font-family: Verdana, sans-serif !important;
+    font-family: inherit !important;
     font-size: 16px !important;
 }
 
@@ -451,16 +451,16 @@ body {
 
 .runner-stats div {
     margin-bottom: 8px;
-    color: #ffffff !important;
+    color: inherit !important;
 }
 
 .runner-stats .label {
-    color: #ffffff !important;
+    color: inherit !important;
     font-weight: bold;
 }
 
 .runner-stats strong {
-    color: #ffffff !important;
+    color: inherit !important;
 }
 
 .stat-positive { color: #27ae60 !important; }
@@ -469,7 +469,7 @@ body {
 .loading {
     opacity: 0.7;
     font-style: italic;
-    color: #ffffff !important;
+    color: inherit !important;
 }
 
 .error {
@@ -483,7 +483,7 @@ body {
     width: 100vw;
     height: 100vh;
     overflow: hidden;
-    font-family: Verdana, sans-serif !important;
+    font-family: inherit !important;
     font-size: 16px !important;
 }
 
@@ -503,7 +503,7 @@ body {
     border-left: 2px solid #fff;
     padding: 10px;
     white-space: nowrap;
-    color: #ffffff !important;
+    color: inherit !important;
 }
 
 .leaderboard .position:first-of-type {
@@ -513,13 +513,13 @@ body {
 .placement-name {
     font-weight: 700;
     text-align: center;
-    color: #ffffff !important;
+    color: inherit !important;
 }
 
 .perf-time {
     margin-top: 8px;
     letter-spacing: -0.5px;
-    color: #ffffff !important;
+    color: inherit !important;
 }
 
 .no-time {
@@ -532,9 +532,10 @@ body {
     text-transform: none !important;
 }
 
-/* Ensure all text in OBS displays is white */
+/* Ensure all text in OBS displays inherits font and color */
 .obs-runner-container *,
 .obs-leaderboard-container * {
+    font-family: inherit !important;
     color: inherit !important;
     text-transform: none !important;
 }
@@ -1414,19 +1415,6 @@ body {
   box-shadow: 0 0 0 0.2rem rgba(142, 68, 173, 0.25);
 }
 
-.font-settings .preview-container {
-  background: #1a1a1a;
-  color: white;
-  border-radius: 8px;
-  padding: 15px;
-  border: 1px solid #333;
-  min-height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-}
-
 .font-settings .alert-info {
   background: rgba(52, 152, 219, 0.1);
   border-color: var(--secondary-color);
@@ -1456,27 +1444,6 @@ body {
     margin-top: 10px;
     width: 100%;
   }
-  
-  .font-settings .preview-container {
-    font-size: 16px;
-    min-height: 80px;
-  }
-}
-
-/* Ensure font changes apply to all OBS elements */
-.obs-runner-container *,
-.obs-leaderboard-container * {
-  font-family: inherit !important;
-}
-
-/* Font preview styling */
-.font-preview {
-  transition: all 0.3s ease;
-  border: 2px solid transparent;
-}
-
-.font-preview:hover {
-  border-color: var(--purple-color);
 }
 
 /* Enhanced Font Settings Styles with Async Support */
@@ -1505,28 +1472,6 @@ body {
   background-color: #f8f9fa;
 }
 
-.font-settings .preview-container {
-  background: #1a1a1a;
-  color: white;
-  border-radius: 8px;
-  padding: 15px;
-  border: 1px solid #333;
-  min-height: 100px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-}
-
-.font-preview {
-  transition: font-family 0.3s ease, border-color 0.3s ease;
-  border: 2px solid transparent;
-}
-
-.font-preview:hover {
-  border-color: var(--purple-color);
-}
-
 /* Loading states for async operations */
 .spinner-border-sm {
   width: 1rem;
@@ -1538,17 +1483,6 @@ body {
   cursor: not-allowed;
 }
 
-/* Async font loading animations */
-@keyframes fontLoad {
-  0% { opacity: 0.7; }
-  50% { opacity: 1; }
-  100% { opacity: 0.7; }
-}
-
-.font-loading {
-  animation: fontLoad 1.5s ease-in-out infinite;
-}
-
 /* Enhanced responsive design for font settings */
 @media (max-width: 768px) {
   .font-settings .col-md-6 {
@@ -1558,11 +1492,6 @@ body {
   .font-settings .card-header .btn {
     margin-top: 10px;
     width: 100%;
-  }
-  
-  .font-settings .preview-container {
-    font-size: 16px;
-    min-height: 80px;
   }
   
   .font-settings .card-header .d-flex {
@@ -1588,4 +1517,90 @@ body {
 .font-error {
   border-color: var(--danger-color) !important;
   box-shadow: 0 0 10px rgba(231, 76, 60, 0.3);
+}
+
+/* Fix form label colors for better visibility */
+.runner-slot .form-label {
+  font-weight: 600;
+  color: #2c3e50 !important; /* Dark blue-gray for better contrast */
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+
+/* Ensure form labels are visible in dark mode */
+@media (prefers-color-scheme: dark) {
+  .runner-slot .form-label {
+    color: #ecf0f1 !important; /* Light color for dark mode */
+  }
+}
+
+/* Specific styling for the time input label to make it stand out */
+.runner-slot .time-input-label {
+  color: #2c3e50 !important;
+  font-weight: 700;
+}
+
+/* Form text styling for better readability */
+.runner-slot .form-text {
+  color: #6c757d !important;
+  font-size: 0.8rem;
+  margin-top: 5px;
+}
+
+/* Ensure proper contrast for validation messages */
+.runner-slot .form-text.text-danger {
+  color: #e74c3c !important;
+  font-weight: 500;
+}
+
+.runner-slot .form-text.text-success {
+  color: #27ae60 !important;
+  font-weight: 500;
+}
+
+/* Critical Fixes for Font and Color Inheritance */
+.obs-runner-container,
+.obs-leaderboard-container {
+  font-family: inherit !important;
+}
+
+.obs-runner-container *,
+.obs-leaderboard-container * {
+  font-family: inherit !important;
+  color: inherit !important;
+}
+
+.runner-stats,
+.runner-stats * {
+  font-family: inherit !important;
+  color: inherit !important;
+}
+
+.leaderboard,
+.leaderboard * {
+  font-family: inherit !important;
+  color: inherit !important;
+}
+
+.position,
+.position * {
+  font-family: inherit !important;
+  color: inherit !important;
+}
+
+.placement-name,
+.perf-time {
+  font-family: inherit !important;
+  color: inherit !important;
+}
+
+/* Ensure all text elements in OBS displays inherit properly */
+.obs-runner-container div,
+.obs-runner-container span,
+.obs-runner-container strong,
+.obs-runner-container .label,
+.obs-leaderboard-container div,
+.obs-leaderboard-container span {
+  font-family: inherit !important;
+  color: inherit !important;
 }
