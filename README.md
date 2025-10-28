@@ -117,6 +117,12 @@ The production build is minified, versioned, and ready for deployment.
 
 ---
 
+### Commentator Display
+- Use the **Commentators tab** to check out commentators with name, handle and discord reactive pfp image 
+- Ensure you have discord's developer mode so you can copy the ID into the dashboard
+
+---
+
 ## Important Notes
 
 - All data is automatically saved when runners are updated  
