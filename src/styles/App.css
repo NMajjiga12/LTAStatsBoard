@@ -1604,3 +1604,822 @@ body {
   font-family: inherit !important;
   color: inherit !important;
 }
+
+/* Commentator Slot Styles */
+.commentator-slot {
+    border-left: 6px solid var(--secondary-color);
+    transition: all 0.3s ease;
+    background: #ffffff;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    animation: slideIn 0.5s ease-out;
+}
+
+.commentator-slot:hover {
+    box-shadow: 0 10px 30px rgba(52, 152, 219, 0.2);
+    transform: translateY(-3px);
+}
+
+.commentator-slot.slot-enabled {
+    border-left: 6px solid var(--success-color);
+}
+
+.commentator-slot.slot-disabled {
+    border-left: 6px solid var(--warning-color);
+}
+
+.commentator-slot.editing {
+    border-left-color: var(--warning-color);
+    box-shadow: 0 0 0 2px rgba(243, 156, 18, 0.1);
+}
+
+.commentator-slot .form-control {
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+    padding: 10px 15px;
+    font-size: 0.95rem;
+    background: #ffffff;
+}
+
+.commentator-slot .form-control:focus {
+    border-color: var(--secondary-color);
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+    background: #ffffff;
+}
+
+.commentator-slot .form-control:read-only {
+    background-color: #f8f9fa !important;
+    cursor: not-allowed;
+    border-color: #ced4da;
+    color: #6c757d;
+}
+
+.commentator-slot .form-control:read-only:focus {
+    border-color: #ced4da;
+    box-shadow: none;
+}
+
+.commentator-slot .form-label {
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.commentator-slot .btn {
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    padding: 10px 15px;
+    font-family: 'Montserrat', sans-serif;
+    width: 100%;
+}
+
+/* Edit/Save Toggle Button */
+.commentator-slot .edit-save-btn {
+    background: var(--secondary-color);
+    color: white;
+}
+
+.commentator-slot .edit-save-btn:hover {
+    background: #2980b9;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+.commentator-slot .edit-save-btn.btn-success {
+    background: var(--success-color);
+}
+
+.commentator-slot .edit-save-btn.btn-success:hover {
+    background: #229954;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+}
+
+.commentator-slot .btn-outline-danger {
+    background: transparent;
+    border: 2px solid var(--danger-color);
+    color: var(--danger-color);
+}
+
+.commentator-slot .btn-outline-danger:hover {
+    background: var(--danger-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.commentator-slot .badge.bg-info {
+    background: var(--secondary-color) !important;
+    font-size: 1rem;
+    padding: 8px 16px;
+    border-radius: 20px;
+}
+
+/* Field States - Editable vs Saved */
+.commentator-slot .field-editing {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border-color: #e9ecef !important;
+}
+
+.commentator-slot .field-saved {
+    background-color: #495057 !important;
+    color: #ffffff !important;
+    border-color: #6c757d !important;
+}
+
+/* Specific field types for saved state */
+.commentator-slot .field-saved.field-name {
+    background-color: #495057 !important;
+}
+
+.commentator-slot .field-saved.field-handle {
+    background-color: #495057 !important;
+}
+
+.commentator-slot .field-saved.field-pfp {
+    background-color: #495057 !important;
+}
+
+/* Focus states for editable fields */
+.commentator-slot .field-editing:focus {
+    border-color: var(--secondary-color) !important;
+    box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25) !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+/* Read-only cursor style for saved fields */
+.commentator-slot .field-saved {
+    cursor: not-allowed !important;
+}
+
+/* Form labels color */
+.commentator-slot .form-label {
+    color: #000000 !important;
+    font-weight: 600;
+}
+
+/* Status badge styling */
+.commentator-slot .badge.bg-success {
+    background-color: var(--success-color) !important;
+    font-size: 0.7rem;
+    padding: 4px 8px;
+}
+
+.commentator-slot .badge.bg-warning {
+    background-color: var(--warning-color) !important;
+    font-size: 0.7rem;
+    padding: 4px 8px;
+}
+
+/* Commentator OBS Links Styling */
+.obs-link-row .badge.bg-info {
+    background-color: var(--secondary-color) !important;
+}
+
+.obs-link-row .btn-info {
+    background-color: var(--secondary-color) !important;
+    color: white !important;
+}
+
+.obs-link-row .btn-info:hover {
+    background-color: #2980b9 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+.obs-link-row .btn-secondary {
+    background-color: #6c757d !important;
+    color: white !important;
+    cursor: not-allowed !important;
+    opacity: 0.6;
+}
+
+.obs-link-row .btn-secondary:hover {
+    background-color: #6c757d !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Commentator section header */
+.bg-info.text-white {
+    background-color: var(--secondary-color) !important;
+}
+
+/* Animation delays for commentator slots */
+.commentator-slot:nth-child(1) { animation-delay: 0.1s; }
+.commentator-slot:nth-child(2) { animation-delay: 0.2s; }
+.commentator-slot:nth-child(3) { animation-delay: 0.3s; }
+
+/* Dark mode support for commentator slots */
+@media (prefers-color-scheme: dark) {
+    .commentator-slot .field-editing {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+    }
+    
+    .commentator-slot .field-saved {
+        background-color: #343a40 !important;
+        color: #ffffff !important;
+        border-color: #495057 !important;
+    }
+    
+    .commentator-slot .form-label {
+        color: #ecf0f1 !important;
+    }
+}
+
+/* Responsive Design for Commentator Slots */
+@media (max-width: 768px) {
+    .commentator-slot .card-body .row {
+        flex-direction: column;
+    }
+    
+    .commentator-slot .col-md-1,
+    .commentator-slot .col-md-3,
+    .commentator-slot .col-md-2 {
+        margin-bottom: 15px;
+        width: 100%;
+    }
+    
+    .commentator-slot .badge.bg-info {
+        width: auto;
+        display: inline-block;
+    }
+    
+    .commentator-slot .d-flex.flex-column {
+        flex-direction: row !important;
+        gap: 10px;
+    }
+    
+    .commentator-slot .btn {
+        width: auto;
+        flex: 1;
+    }
+    
+    .commentator-slot {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+  .commentator-slot {
+      border-left: 4px solid var(--secondary-color);
+  }
+  
+  .commentator-slot.slot-enabled {
+      border-left: 4px solid var(--success-color);
+  }
+  
+  .commentator-slot.slot-disabled {
+      border-left: 4px solid var(--warning-color);
+  }
+  
+  .form-control {
+      padding: 8px 12px;
+      font-size: 0.9rem;
+  }
+  
+  .btn {
+      padding: 8px 16px;
+      font-size: 0.85rem;
+  }
+}
+
+/* OBS Links Button Colors */
+.obs-link-row .btn-primary {
+    background-color: var(--secondary-color) !important;
+    color: white !important;
+}
+
+.obs-link-row .btn-primary:hover {
+    background-color: #2980b9 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(52, 152, 219, 0.4);
+}
+
+.obs-link-row .btn-secondary {
+    background-color: #6c757d !important;
+    color: white !important;
+    cursor: not-allowed !important;
+    opacity: 0.6;
+}
+
+.obs-link-row .btn-secondary:hover {
+    background-color: #6c757d !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Section Header Colors */
+.bg-purple.text-white {
+    background-color: var(--purple-color) !important;
+}
+
+.bg-primary.text-white {
+    background-color: var(--secondary-color) !important;
+}
+
+.bg-info.text-white {
+    background-color: var(--secondary-color) !important;
+}
+
+/* Badge colors in OBS links */
+.obs-link-row .badge.bg-primary {
+    background-color: var(--secondary-color) !important;
+}
+
+.obs-link-row .badge.bg-info {
+    background-color: var(--secondary-color) !important;
+}
+
+.obs-link-row .badge.bg-purple {
+    background-color: var(--purple-color) !important;
+}
+
+.commentator-slot .discord-id-input.field-editing {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+}
+
+.commentator-slot .discord-id-input.field-saved {
+  font-family: 'Courier New', monospace;
+  font-size: 0.9rem;
+}
+
+/* Commentator Slot Styles - Matching Runner Slots */
+.commentator-slot {
+    border-left: 6px solid var(--purple-color);
+    transition: all 0.3s ease;
+    background: #ffffff;
+    border-radius: 12px;
+    position: relative;
+    overflow: hidden;
+    animation: slideIn 0.5s ease-out;
+    margin-bottom: 20px;
+}
+
+.commentator-slot:hover {
+    box-shadow: 0 10px 30px rgba(142, 68, 173, 0.2);
+    transform: translateY(-3px);
+}
+
+.commentator-slot.slot-enabled {
+    border-left: 6px solid var(--success-color);
+}
+
+.commentator-slot.slot-disabled {
+    border-left: 6px solid var(--warning-color);
+}
+
+.commentator-slot.editing {
+    border-left-color: var(--warning-color);
+    box-shadow: 0 0 0 2px rgba(243, 156, 18, 0.1);
+}
+
+.commentator-slot .form-control {
+    border-radius: 8px;
+    border: 2px solid #e9ecef;
+    transition: all 0.3s ease;
+    padding: 10px 15px;
+    font-size: 0.95rem;
+    background: #ffffff;
+}
+
+.commentator-slot .form-control:focus {
+    border-color: var(--purple-color);
+    box-shadow: 0 0 0 0.2rem rgba(142, 68, 173, 0.25);
+    background: #ffffff;
+}
+
+.commentator-slot .form-control:read-only {
+    background-color: #f8f9fa !important;
+    cursor: not-allowed;
+    border-color: #ced4da;
+    color: #6c757d;
+}
+
+.commentator-slot .form-control:read-only:focus {
+    border-color: #ced4da;
+    box-shadow: none;
+}
+
+.commentator-slot .form-label {
+    font-weight: 600;
+    color: #000000 !important;
+    margin-bottom: 8px;
+    font-size: 0.9rem;
+}
+
+.commentator-slot .btn {
+    border-radius: 8px;
+    font-weight: 600;
+    transition: all 0.3s ease;
+    border: none;
+    padding: 10px 15px;
+    font-family: 'Montserrat', sans-serif;
+    width: 100%;
+}
+
+/* Edit/Save Toggle Button for Commentators */
+.commentator-slot .edit-save-btn {
+    background: var(--purple-color);
+    color: white;
+}
+
+.commentator-slot .edit-save-btn:hover {
+    background: #7d3c98;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(142, 68, 173, 0.4);
+}
+
+.commentator-slot .edit-save-btn.btn-success {
+    background: var(--success-color);
+}
+
+.commentator-slot .edit-save-btn.btn-success:hover {
+    background: #229954;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(39, 174, 96, 0.4);
+}
+
+.commentator-slot .btn-outline-danger {
+    background: transparent;
+    border: 2px solid var(--danger-color);
+    color: var(--danger-color);
+}
+
+.commentator-slot .btn-outline-danger:hover {
+    background: var(--danger-color);
+    color: white;
+    transform: translateY(-2px);
+}
+
+.commentator-slot .badge.bg-info {
+    background: var(--purple-color) !important;
+    font-size: 1rem;
+    padding: 8px 16px;
+    border-radius: 20px;
+}
+
+/* Field States - Editable vs Saved for Commentators */
+.commentator-slot .field-editing {
+    background-color: #ffffff !important;
+    color: #000000 !important;
+    border-color: #e9ecef !important;
+}
+
+.commentator-slot .field-saved {
+    background-color: #495057 !important;
+    color: #ffffff !important;
+    border-color: #6c757d !important;
+}
+
+/* Specific field types for saved state */
+.commentator-slot .field-saved.field-name {
+    background-color: #495057 !important;
+}
+
+.commentator-slot .field-saved.field-handle {
+    background-color: #495057 !important;
+}
+
+.commentator-slot .field-saved.field-pfp {
+    background-color: #495057 !important;
+}
+
+.commentator-slot .field-saved.field-discord {
+    background-color: #495057 !important;
+}
+
+/* Focus states for editable fields */
+.commentator-slot .field-editing:focus {
+    border-color: var(--purple-color) !important;
+    box-shadow: 0 0 0 0.2rem rgba(142, 68, 173, 0.25) !important;
+    background-color: #ffffff !important;
+    color: #000000 !important;
+}
+
+/* Read-only cursor style for saved fields */
+.commentator-slot .field-saved {
+    cursor: not-allowed !important;
+}
+
+/* Status badge styling for commentators */
+.commentator-slot .badge.bg-success {
+    background-color: var(--success-color) !important;
+    font-size: 0.7rem;
+    padding: 4px 8px;
+}
+
+.commentator-slot .badge.bg-warning {
+    background-color: var(--warning-color) !important;
+    font-size: 0.7rem;
+    padding: 4px 8px;
+}
+
+/* Commentator OBS Links Styling */
+.commentator-obs-links .badge.bg-info {
+    background-color: var(--purple-color) !important;
+}
+
+.commentator-obs-links .btn-info {
+    background-color: var(--purple-color) !important;
+    color: white !important;
+}
+
+.commentator-obs-links .btn-info:hover {
+    background-color: #7d3c98 !important;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(142, 68, 173, 0.4);
+}
+
+.commentator-obs-links .btn-secondary {
+    background-color: #6c757d !important;
+    color: white !important;
+    cursor: not-allowed !important;
+    opacity: 0.6;
+}
+
+.commentator-obs-links .btn-secondary:hover {
+    background-color: #6c757d !important;
+    transform: none !important;
+    box-shadow: none !important;
+}
+
+/* Commentator section header */
+.commentator-header {
+    background-color: var(--purple-color) !important;
+    color: white !important;
+    border-radius: 15px 15px 0 0 !important;
+    padding: 15px 20px;
+    font-weight: 600;
+    font-family: 'Montserrat', sans-serif;
+    border-bottom: none;
+}
+
+/* Animation delays for commentator slots */
+.commentator-slot:nth-child(1) { animation-delay: 0.1s; }
+.commentator-slot:nth-child(2) { animation-delay: 0.2s; }
+.commentator-slot:nth-child(3) { animation-delay: 0.3s; }
+.commentator-slot:nth-child(4) { animation-delay: 0.4s; }
+
+/* Dark mode support for commentator slots */
+@media (prefers-color-scheme: dark) {
+    .commentator-slot .field-editing {
+        background-color: #ffffff !important;
+        color: #000000 !important;
+    }
+    
+    .commentator-slot .field-saved {
+        background-color: #343a40 !important;
+        color: #ffffff !important;
+        border-color: #495057 !important;
+    }
+    
+    .commentator-slot .form-label {
+        color: #ecf0f1 !important;
+    }
+    
+    .commentator-slot {
+        background: #343a40;
+    }
+}
+
+/* Responsive Design for Commentator Slots */
+@media (max-width: 768px) {
+    .commentator-slot .card-body .row {
+        flex-direction: column;
+    }
+    
+    .commentator-slot .col-md-1,
+    .commentator-slot .col-md-3,
+    .commentator-slot .col-md-2 {
+        margin-bottom: 15px;
+        width: 100%;
+    }
+    
+    .commentator-slot .badge.bg-info {
+        width: auto;
+        display: inline-block;
+    }
+    
+    .commentator-slot .d-flex.flex-column {
+        flex-direction: row !important;
+        gap: 10px;
+    }
+    
+    .commentator-slot .btn {
+        width: auto;
+        flex: 1;
+    }
+    
+    .commentator-slot {
+        margin-bottom: 20px;
+    }
+}
+
+@media (max-width: 576px) {
+    .commentator-slot {
+        border-left: 4px solid var(--purple-color);
+    }
+    
+    .commentator-slot.slot-enabled {
+        border-left: 4px solid var(--success-color);
+    }
+    
+    .commentator-slot.slot-disabled {
+        border-left: 4px solid var(--warning-color);
+    }
+    
+    .commentator-slot .form-control {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+    
+    .commentator-slot .btn {
+        padding: 8px 16px;
+        font-size: 0.85rem;
+    }
+}
+
+/* Commentator OBS Links Matching Runner OBS Links */
+.commentator-obs-links .obs-link-row {
+    border-bottom: 1px solid rgba(0,0,0,0.1);
+    transition: all 0.3s ease;
+}
+
+.commentator-obs-links .obs-link-row:last-child {
+    border-bottom: none;
+}
+
+.commentator-obs-links .obs-link-item {
+    transition: all 0.3s ease;
+    border-radius: 10px;
+    margin: 5px;
+    background: #ffffff;
+}
+
+.commentator-obs-links .obs-link-item:hover {
+    background: #f8f9fa;
+    transform: translateX(5px);
+}
+
+.commentator-obs-links .commentator-name-display {
+    font-weight: 700;
+    font-size: 1.1rem;
+    color: var(--primary-color);
+    font-family: 'Montserrat', sans-serif;
+}
+
+.commentator-obs-links .commentator-handle-display {
+    font-style: italic;
+    color: #6c757d;
+    font-size: 0.9rem;
+}
+
+.commentator-obs-links .obs-url-display {
+    font-family: 'Courier New', monospace;
+    font-size: 0.85rem;
+    color: #495057;
+    word-break: break-all;
+    background: #f8f9fa;
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid #dee2e6;
+    transition: all 0.3s ease;
+}
+
+.commentator-obs-links .obs-link-item:hover .obs-url-display {
+    background: #f3e8fd;
+    border-color: var(--purple-color);
+}
+
+.commentator-obs-links .obs-link-actions {
+    flex-shrink: 0;
+}
+
+/* Discord ID specific styling */
+.commentator-slot .discord-id-input.field-editing {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.commentator-slot .discord-id-input.field-saved {
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+/* Profile Picture Preview Styling */
+.commentator-slot .pfp-preview {
+    width: 50px;
+    height: 50px;
+    border-radius: 50%;
+    object-fit: cover;
+    border: 2px solid var(--purple-color);
+    transition: all 0.3s ease;
+}
+
+.commentator-slot .pfp-preview:hover {
+    transform: scale(1.1);
+    box-shadow: 0 4px 15px rgba(142, 68, 173, 0.3);
+}
+
+/* Commentator-specific status indicators */
+.commentator-status-indicator {
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    display: inline-block;
+    margin-right: 6px;
+}
+
+.status-commentator-live {
+    background-color: var(--purple-color);
+    box-shadow: 0 0 6px var(--purple-color);
+}
+
+.status-commentator-offline {
+    background-color: var(--danger-color);
+}
+
+.status-commentator-loading {
+    background-color: var(--warning-color);
+    animation: pulse 1.5s infinite;
+}
+
+/* Ensure consistent card backgrounds */
+.commentator-slots-container .commentator-slot,
+.runner-slots-container .runner-slot {
+    background: #ffffff;
+}
+
+/* Dark mode background consistency */
+@media (prefers-color-scheme: dark) {
+    .commentator-slots-container .commentator-slot,
+    .runner-slots-container .runner-slot {
+        background: #343a40;
+    }
+    
+    .commentator-obs-links .obs-link-item,
+    .obs-link-row .obs-link-item {
+        background: #343a40;
+    }
+}
+
+/* Form text styling for commentators */
+.commentator-slot .form-text {
+    color: #6c757d !important;
+    font-size: 0.8rem;
+    margin-top: 5px;
+}
+
+/* Ensure proper contrast for validation messages */
+.commentator-slot .form-text.text-danger {
+    color: #e74c3c !important;
+    font-weight: 500;
+}
+
+.commentator-slot .form-text.text-success {
+    color: #27ae60 !important;
+    font-weight: 500;
+}
+
+/* Commentator toggle switch styling */
+.commentator-slot .form-check-input:checked {
+    background-color: var(--purple-color);
+    border-color: var(--purple-color);
+}
+
+.commentator-slot .form-check-input:focus {
+    border-color: var(--purple-color);
+    box-shadow: 0 0 0 0.2rem rgba(142, 68, 173, 0.25);
+}
+
+/* Commentator section spacing */
+.commentator-section {
+    margin-bottom: 30px;
+}
+
+/* Ensure commentator OBS links match runner OBS links spacing */
+.commentator-obs-links .obs-link-row {
+    margin-bottom: 10px;
+}
+
+/* Button consistency for commentator actions */
+.commentator-slot .btn-purple {
+    background: var(--purple-color);
+    color: white;
+}
+
+.commentator-slot .btn-purple:hover {
+    background: #7d3c98;
+    transform: translateY(-2px);
+    box-shadow: 0 6px 20px rgba(142, 68, 173, 0.4);
+    color: white;
+}

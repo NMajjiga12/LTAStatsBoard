@@ -1,4 +1,3 @@
-// src/components/OBSLeaderboard.js
 import React, { useState, useEffect } from 'react';
 import { formatTimeForDisplay } from '../utils/timeFormat';
 
@@ -6,6 +5,7 @@ const OBSLeaderboard = ({ fontFamily = 'Verdana, sans-serif', textColor = '#ffff
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [lastUpdate, setLastUpdate] = useState(Date.now());
 
   const fetchLeaderboardData = async () => {
     try {
@@ -33,6 +33,20 @@ const OBSLeaderboard = ({ fontFamily = 'Verdana, sans-serif', textColor = '#ffff
     const interval = setInterval(fetchLeaderboardData, 1000);
     
     return () => clearInterval(interval);
+  }, [lastUpdate]); // Added lastUpdate dependency
+
+  // Listen for runner data updates
+  useEffect(() => {
+    const handleRunnerDataUpdated = (event) => {
+      console.log('OBSLeaderboard received update event, refreshing...');
+      setLastUpdate(Date.now());
+    };
+
+    window.addEventListener('runnerDataUpdated', handleRunnerDataUpdated);
+    
+    return () => {
+      window.removeEventListener('runnerDataUpdated', handleRunnerDataUpdated);
+    };
   }, []);
 
   // Apply custom font and full background to the component
