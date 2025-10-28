@@ -1,10 +1,11 @@
-// src/components/Display.js
 import React, { useState, useEffect, useCallback } from 'react';
 import { formatTimeForDisplay } from '../utils/timeFormat';
 
 const Display = ({ leaderboardData, runnerData }) => {
   const [runnerStats, setRunnerStats] = useState({});
   const [loading, setLoading] = useState({});
+  const [lastUpdate, setLastUpdate] = useState(Date.now());
+  const [forceRefresh, setForceRefresh] = useState({});
 
   const formatTime = (ms) => {
     if (!ms) return 'N/A';
@@ -58,9 +59,23 @@ const Display = ({ leaderboardData, runnerData }) => {
 
   // Fetch runner stats from therun.gg
   const fetchRunnerStats = useCallback(async (therunUsername, runnerId) => {
-    if (!therunUsername) return;
+    if (!therunUsername) {
+      // Clear stats if no username
+      setRunnerStats(prev => {
+        const newStats = { ...prev };
+        delete newStats[runnerId];
+        return newStats;
+      });
+      setLoading(prev => {
+        const newLoading = { ...prev };
+        delete newLoading[runnerId];
+        return newLoading;
+      });
+      return;
+    }
 
     try {
+      console.log(`Fetching stats for ${therunUsername} (runner ${runnerId})`);
       const response = await fetch(`https://therun.gg/api/live/${therunUsername}`);
       
       if (!response.ok) {
@@ -77,23 +92,67 @@ const Display = ({ leaderboardData, runnerData }) => {
         ...prev,
         [runnerId]: data
       }));
+      setLoading(prev => ({
+        ...prev,
+        [runnerId]: false
+      }));
     } catch (err) {
       console.error(`Failed to fetch stats for ${therunUsername}:`, err);
-      // Only set error if we don't have previous data
-      if (!runnerStats[runnerId]) {
-        setRunnerStats(prev => ({
-          ...prev,
-          [runnerId]: { error: err.message }
-        }));
-      }
-    } finally {
-      setLoading(prev => ({ ...prev, [runnerId]: false }));
+      setRunnerStats(prev => ({
+        ...prev,
+        [runnerId]: { error: err.message }
+      }));
+      setLoading(prev => ({
+        ...prev,
+        [runnerId]: false
+      }));
     }
-  }, [runnerStats]);
+  }, []);
+
+  useEffect(() => {
+    const handleRunnerDataUpdated = (event) => {
+      const { runnerId, timestamp, username } = event.detail;
+      console.log(`Display received update event for runner ${runnerId} at ${timestamp}`);
+      
+      // Force immediate refresh for the specific runner
+      const runner = runnerData.find(r => r.id === runnerId);
+      if (runner && runner.therunUsername) {
+        console.log(`Immediately refreshing stats for runner ${runnerId}: ${runner.therunUsername}`);
+        setLoading(prev => ({ ...prev, [runnerId]: true }));
+        fetchRunnerStats(runner.therunUsername, runnerId);
+      }
+      
+      // Also update the global lastUpdate to refresh all components
+      setLastUpdate(Date.now());
+    };
+
+    window.addEventListener('runnerDataUpdated', handleRunnerDataUpdated);
+    
+    return () => {
+      window.removeEventListener('runnerDataUpdated', handleRunnerDataUpdated);
+    };
+  }, [runnerData, fetchRunnerStats]);
+
+  // Add a more aggressive refresh mechanism
+  useEffect(() => {
+    // Refresh all runner stats when runnerData changes significantly
+    const runnersWithUsernames = runnerData.filter(runner => runner.therunUsername);
+    
+    runnersWithUsernames.forEach(runner => {
+      // Only refresh if we don't have current data or if data might be stale
+      const currentStats = runnerStats[runner.id];
+      if (!currentStats || currentStats.error || Date.now() - lastUpdate > 5000) {
+        setLoading(prev => ({ ...prev, [runner.id]: true }));
+        fetchRunnerStats(runner.therunUsername, runner.id);
+      }
+    });
+  }, [runnerData, lastUpdate, fetchRunnerStats, runnerStats]);
 
   // Initialize and set up intervals for all runners
   useEffect(() => {
     const runnersWithUsernames = runnerData.filter(runner => runner.therunUsername);
+    
+    console.log('Setting up runner stats intervals for:', runnersWithUsernames.map(r => r.therunUsername));
     
     // Initial fetch for all runners
     runnersWithUsernames.forEach(runner => {
@@ -109,18 +168,75 @@ const Display = ({ leaderboardData, runnerData }) => {
     );
 
     return () => intervals.forEach(interval => clearInterval(interval));
+  }, [runnerData, fetchRunnerStats, lastUpdate]);
+
+  // Enhanced refresh mechanism using async service
+  useEffect(() => {
+    const unsubscribeCallbacks = [];
+
+    // Subscribe to updates for each runner
+    runnerData.forEach(runner => {
+      if (runner.therunUsername) {
+        const unsubscribe = asyncRunnerService.subscribe(runner.id, (updatedRunner) => {
+          console.log(`Display received async update for runner ${runner.id}`, updatedRunner);
+          if (updatedRunner.therunUsername && updatedRunner.therunUsername !== runner.therunUsername) {
+            console.log(`Username changed to ${updatedRunner.therunUsername}, refreshing stats`);
+            setLoading(prev => ({ ...prev, [runner.id]: true }));
+            fetchRunnerStats(updatedRunner.therunUsername, runner.id);
+          }
+        });
+        unsubscribeCallbacks.push(unsubscribe);
+      }
+    });
+
+    return () => {
+      unsubscribeCallbacks.forEach(unsubscribe => unsubscribe());
+    };
   }, [runnerData, fetchRunnerStats]);
 
-  // Update stats when new runners are added
+  // Listen for therun-specific username updates
+  useEffect(() => {
+    const handleTherunUsernameUpdated = (event) => {
+      const { runnerId, oldUsername, newUsername } = event.detail;
+      console.log(`Therun username updated for runner ${runnerId}: ${oldUsername} -> ${newUsername}`);
+      
+      if (newUsername) {
+        setLoading(prev => ({ ...prev, [runnerId]: true }));
+        fetchRunnerStats(newUsername, runnerId);
+      }
+    };
+
+    window.addEventListener('therunUsernameUpdated', handleTherunUsernameUpdated);
+    
+    return () => {
+      window.removeEventListener('therunUsernameUpdated', handleTherunUsernameUpdated);
+    };
+  }, [fetchRunnerStats]);
+
+  // Update stats when new runners are added or usernames change
   useEffect(() => {
     const currentRunnerIds = Object.keys(runnerStats);
     const newRunners = runnerData.filter(runner => 
       runner.therunUsername && !currentRunnerIds.includes(runner.id.toString())
     );
 
+    console.log('New runners to fetch stats for:', newRunners);
+
     newRunners.forEach(runner => {
       setLoading(prev => ({ ...prev, [runner.id]: true }));
       fetchRunnerStats(runner.therunUsername, runner.id);
+    });
+
+    // Also update existing runners if their usernames changed
+    runnerData.forEach(runner => {
+      if (runner.therunUsername && runnerStats[runner.id]) {
+        const currentStats = runnerStats[runner.id];
+        if (currentStats.login !== runner.therunUsername) {
+          console.log(`Username changed for runner ${runner.id}, refreshing stats`);
+          setLoading(prev => ({ ...prev, [runner.id]: true }));
+          fetchRunnerStats(runner.therunUsername, runner.id);
+        }
+      }
     });
   }, [runnerData, runnerStats, fetchRunnerStats]);
 
@@ -156,7 +272,15 @@ const Display = ({ leaderboardData, runnerData }) => {
             </div>
             <div className="card-body p-0">
               <div className="p-3 bg-dark text-white border-bottom">
-                <small>Live Leaderboard Display - Updates automatically</small>
+                <div className="d-flex justify-content-between align-items-center">
+                  <small>Live Leaderboard Display</small>
+                  <button 
+                    className="btn btn-sm btn-outline-light"
+                    onClick={() => setLastUpdate(Date.now())}
+                  >
+                    <i className="fas fa-sync-alt me-1"></i> Refresh
+                  </button>
+                </div>
               </div>
               <div 
                 className="leaderboard-preview"
@@ -218,7 +342,15 @@ const Display = ({ leaderboardData, runnerData }) => {
           <div className="card">
             <div className="card-header d-flex justify-content-between align-items-center">
               <span><i className="fas fa-running"></i> Runner Stats Previews</span>
-              <small className="text-muted">Live Updates</small>
+              <div>
+                <small className="text-muted me-2">Live Updates</small>
+                <button 
+                  className="btn btn-sm btn-outline-primary"
+                  onClick={() => setLastUpdate(Date.now())}
+                >
+                  <i className="fas fa-sync-alt me-1"></i> Refresh All
+                </button>
+              </div>
             </div>
             <div className="card-body">
               {runnersWithUsernames.length === 0 ? (
@@ -242,8 +374,16 @@ const Display = ({ leaderboardData, runnerData }) => {
                               {runner.therunUsername && ` (@${runner.therunUsername})`}
                             </small>
                             <div className="d-flex align-items-center">
+                              {isLoading && (
+                                <span className="badge bg-warning me-2">
+                                  <i className="fas fa-spinner fa-spin me-1"></i>Loading
+                                </span>
+                              )}
                               {isLive && (
                                 <span className="badge bg-success">LIVE</span>
+                              )}
+                              {hasError && (
+                                <span className="badge bg-danger">Error</span>
                               )}
                             </div>
                           </div>
@@ -258,10 +398,13 @@ const Display = ({ leaderboardData, runnerData }) => {
                             }}
                           >
                             {isLoading && !stats ? (
-                              <div className="text-center">Loading stats...</div>
+                              <div className="text-center">
+                                <i className="fas fa-spinner fa-spin me-2"></i>
+                                Loading stats for {runner.therunUsername}...
+                              </div>
                             ) : hasError ? (
                               <div className="text-warning">
-                                <div>Unable to load live stats</div>
+                                <div><i className="fas fa-exclamation-triangle me-2"></i>Unable to load live stats</div>
                                 <small className="text-muted">Check username or runner status</small>
                               </div>
                             ) : isLive ? (

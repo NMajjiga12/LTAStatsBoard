@@ -4,7 +4,8 @@ import { BrowserRouter as Router, Routes, Route, useLocation } from 'react-route
 import Dashboard from './components/Dashboard';
 import OBSRunner from './components/OBSRunner';
 import OBSLeaderboard from './components/OBSLeaderboard';
-import { getRunners, saveRunners, getLeaderboardData } from './services/api';
+import OBSCommentator from './components/OBSCommentator';
+import { getRunners, saveRunners, getLeaderboardData, getCommentators, saveCommentators } from './services/api';
 import './styles/App.css';
 
 // Font service for async operations
@@ -24,7 +25,6 @@ const FontService = {
         const savedFonts = localStorage.getItem('fontSettings');
         if (savedFonts) {
           const parsed = JSON.parse(savedFonts);
-          // Ensure all settings exist with defaults
           resolve({
             obsRunnerFont: parsed.obsRunnerFont || 'Verdana, sans-serif',
             obsLeaderboardFont: parsed.obsLeaderboardFont || 'Verdana, sans-serif',
@@ -32,7 +32,6 @@ const FontService = {
             obsLeaderboardColor: parsed.obsLeaderboardColor || '#ffffff'
           });
         } else {
-          // Return default settings if nothing is saved
           resolve({
             obsRunnerFont: 'Verdana, sans-serif',
             obsLeaderboardFont: 'Verdana, sans-serif',
@@ -50,6 +49,7 @@ function AppContent() {
   const location = useLocation();
   const [activeTab, setActiveTab] = useState('runners');
   const [runnerData, setRunnerData] = useState([]);
+  const [commentatorData, setCommentatorData] = useState([]);
   const [leaderboardData, setLeaderboardData] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [fontSettings, setFontSettings] = useState({
@@ -61,7 +61,7 @@ function AppContent() {
   const [fontLoading, setFontLoading] = useState(false);
 
   // Check if we're on an OBS route
-  const isOBSRoute = location.pathname.startsWith('/obs');
+  const isOBSRoute = location.pathname.startsWith('/obs') || location.pathname.startsWith('/commentator');
 
   // Load font settings asynchronously
   useEffect(() => {
@@ -106,6 +106,17 @@ function AppContent() {
     }));
   }, []);
 
+  // Initialize with default commentator data if empty
+  const initializeDefaultCommentators = useCallback(() => {
+    return Array(3).fill().map((_, index) => ({
+      id: index + 1,
+      name: "",
+      handle: "",
+      discordId: "",
+      enabled: false
+    }));
+  }, []);
+
   const updateLeaderboard = useCallback(async () => {
     try {
       const data = await getLeaderboardData();
@@ -115,9 +126,28 @@ function AppContent() {
     }
   }, []);
 
+  const loadCommentators = async () => {
+    try {
+      const commentators = await getCommentators();
+      
+      if (!commentators || commentators.length === 0) {
+        const defaultCommentators = initializeDefaultCommentators();
+        setCommentatorData(defaultCommentators);
+        await saveCommentators(defaultCommentators);
+      } else {
+        setCommentatorData(commentators);
+      }
+    } catch (error) {
+      console.error('Failed to load commentators:', error);
+      const defaultCommentators = initializeDefaultCommentators();
+      setCommentatorData(defaultCommentators);
+    }
+  };
+
   const loadData = useCallback(async () => {
     try {
       setIsLoading(true);
+      
       const runners = await getRunners();
       
       if (!runners || runners.length === 0) {
@@ -128,15 +158,18 @@ function AppContent() {
         setRunnerData(runners);
       }
       
+      await loadCommentators();
       await updateLeaderboard();
     } catch (error) {
       console.error('Failed to load data:', error);
       const defaultRunners = initializeDefaultRunners();
       setRunnerData(defaultRunners);
+      const defaultCommentators = initializeDefaultCommentators();
+      setCommentatorData(defaultCommentators);
     } finally {
       setIsLoading(false);
     }
-  }, [initializeDefaultRunners, updateLeaderboard]);
+  }, [initializeDefaultRunners, initializeDefaultCommentators, updateLeaderboard]);
 
   useEffect(() => {
     if (!isOBSRoute) {
@@ -146,13 +179,33 @@ function AppContent() {
 
   const handleSaveRunner = async (slot, updatedRunner) => {
     try {
+      // Update local state immediately for responsive UI
       const newData = [...runnerData];
       newData[slot] = updatedRunner;
       setRunnerData(newData);
+      
+      // Save to server
       await saveRunners(newData);
+      
+      // Update leaderboard with fresh data from server
       await updateLeaderboard();
+      
+      // Trigger update event for OBS endpoints
+      setTimeout(() => {
+        const refreshEvent = new CustomEvent('runnerDataUpdated', {
+          detail: {
+            timestamp: Date.now()
+          }
+        });
+        window.dispatchEvent(refreshEvent);
+      }, 100);
+      
     } catch (error) {
       console.error('Failed to save runner:', error);
+      alert('Failed to save runner: ' + error.message);
+      
+      // Reload data to ensure consistency
+      await loadData();
     }
   };
 
@@ -167,10 +220,67 @@ function AppContent() {
         validTime: false
       };
       setRunnerData(newData);
+      
       await saveRunners(newData);
       await updateLeaderboard();
+      
+      // Trigger update event for OBS endpoints
+      setTimeout(() => {
+        const refreshEvent = new CustomEvent('runnerDataUpdated', {
+          detail: {
+            timestamp: Date.now()
+          }
+        });
+        window.dispatchEvent(refreshEvent);
+      }, 100);
+      
     } catch (error) {
       console.error('Failed to clear slot:', error);
+      alert('Failed to clear slot: ' + error.message);
+      await loadData();
+    }
+  };
+
+  const handleSaveCommentator = async (slot, updatedCommentator) => {
+    try {
+      // Update local state immediately for responsive UI
+      const newData = [...commentatorData];
+      newData[slot] = updatedCommentator;
+      setCommentatorData(newData);
+      
+      // Save to server
+      await saveCommentators(newData);
+      
+    } catch (error) {
+      console.error('Failed to save commentator:', error);
+      alert('Failed to save commentator: ' + error.message);
+      
+      // Reload data to ensure consistency
+      const originalData = await getCommentators();
+      setCommentatorData(originalData);
+    }
+  };
+
+  const handleClearCommentatorSlot = async (slot) => {
+    try {
+      const newData = [...commentatorData];
+      newData[slot] = {
+        id: slot + 1,
+        name: "",
+        handle: "",
+        pfpLink: "",
+        enabled: false
+      };
+      setCommentatorData(newData);
+      
+      await saveCommentators(newData);
+      
+    } catch (error) {
+      console.error('Failed to clear commentator slot:', error);
+      alert('Failed to clear commentator slot: ' + error.message);
+      
+      const originalData = await getCommentators();
+      setCommentatorData(originalData);
     }
   };
 
@@ -207,6 +317,12 @@ function AppContent() {
             textColor={fontSettings.obsRunnerColor}
           />
         } />
+        <Route path="/commentator/:commentatorNumber" element={
+          <OBSCommentatorWrapper 
+            fontFamily={fontSettings.obsRunnerFont} 
+            textColor={fontSettings.obsRunnerColor}
+          />
+        } />
       </Routes>
     );
   }
@@ -239,9 +355,12 @@ function AppContent() {
         activeTab={activeTab}
         onTabChange={setActiveTab}
         runnerData={runnerData}
+        commentatorData={commentatorData}
         leaderboardData={leaderboardData}
         onSaveRunner={handleSaveRunner}
+        onSaveCommentator={handleSaveCommentator}
         onClearSlot={handleClearSlot}
+        onClearCommentatorSlot={handleClearCommentatorSlot}
         onUpdateLeaderboard={updateLeaderboard}
         fontSettings={fontSettings}
         onFontChange={handleFontChange}
@@ -258,6 +377,14 @@ function OBSRunnerWrapper({ fontFamily, textColor }) {
   const username = location.pathname.split('/').pop();
   
   return <OBSRunner username={username} fontFamily={fontFamily} textColor={textColor} />;
+}
+
+// Wrapper component to extract commentatorNumber from URL params for OBSCommentator
+function OBSCommentatorWrapper({ fontFamily, textColor }) {
+  const location = useLocation();
+  const commentatorNumber = location.pathname.split('/').pop();
+  
+  return <OBSCommentator commentatorNumber={commentatorNumber} fontFamily={fontFamily} textColor={textColor} />;
 }
 
 // Main App component with Router

@@ -8,6 +8,7 @@ const RunnerSlot = ({ runner, slot, onSave, onClear }) => {
   const [time, setTime] = useState(runner.time || '');
   const [validTime, setValidTime] = useState(runner.validTime || false);
   const [isEditing, setIsEditing] = useState(false);
+  const [saving, setSaving] = useState(false); // Add saving state
 
   // Initialize state when runner prop changes
   useEffect(() => {
@@ -46,15 +47,20 @@ const RunnerSlot = ({ runner, slot, onSave, onClear }) => {
     setValidTime(validateTimeFormat(newTime));
   };
 
-  const handleSave = () => {
-    onSave(slot, {
-      ...runner,
-      name,
-      therunUsername,
-      time,
-      validTime
-    });
-    setIsEditing(false); // Switch to non-edit mode after saving
+  const handleSave = async () => {
+    setSaving(true);
+    try {
+      await onSave(slot, {
+        ...runner,
+        name,
+        therunUsername,
+        time,
+        validTime
+      });
+      setIsEditing(false);
+    } finally {
+      setSaving(false);
+    }
   };
 
   const handleEditToggle = () => {
@@ -88,7 +94,7 @@ const RunnerSlot = ({ runner, slot, onSave, onClear }) => {
   const hasData = name || therunUsername || time;
 
   return (
-    <div className={`card runner-slot ${isEditing ? 'editing' : 'saved'}`}>
+    <div className={`card runner-slot ${isEditing ? 'editing' : 'saved'} ${saving ? 'saving' : ''}`}>
       <div className="card-body">
         <div className="row align-items-start">
           {/* Slot Number */}
@@ -108,7 +114,8 @@ const RunnerSlot = ({ runner, slot, onSave, onClear }) => {
                 value={name}
                 onChange={(e) => setName(e.target.value)}
                 placeholder="Enter runner name"
-                readOnly={!isEditing}
+                readOnly={!isEditing || saving}
+                disabled={saving}
               />
             </div>
           </div>
@@ -123,7 +130,8 @@ const RunnerSlot = ({ runner, slot, onSave, onClear }) => {
                 value={therunUsername}
                 onChange={(e) => setTherunUsername(e.target.value)}
                 placeholder="Enter therun.gg username"
-                readOnly={!isEditing}
+                readOnly={!isEditing || saving}
+                disabled={saving}
               />
             </div>
           </div>
@@ -138,7 +146,8 @@ const RunnerSlot = ({ runner, slot, onSave, onClear }) => {
                 value={time}
                 onChange={(e) => handleTimeChange(e.target.value)}
                 placeholder="00:00:00.000"
-                readOnly={!isEditing}
+                readOnly={!isEditing || saving}
+                disabled={saving}
               />
               {isEditing && time && !validTime && (
                 <div className="form-text text-danger small">
@@ -155,9 +164,18 @@ const RunnerSlot = ({ runner, slot, onSave, onClear }) => {
               <button 
                 className={`btn ${isEditing ? 'btn-success' : 'btn-primary'} edit-save-btn`} 
                 onClick={handleEditToggle}
+                disabled={saving}
               >
-                <i className={`fas ${isEditing ? 'fa-save' : 'fa-edit'} me-1`}></i> 
-                {isEditing ? 'Save' : 'Edit'}
+                {saving ? (
+                  <>
+                    <i className="fas fa-spinner fa-spin me-1"></i> Saving...
+                  </>
+                ) : (
+                  <>
+                    <i className={`fas ${isEditing ? 'fa-save' : 'fa-edit'} me-1`}></i> 
+                    {isEditing ? 'Save' : 'Edit'}
+                  </>
+                )}
               </button>
               
               {/* Clear Button - Only show when editing or if there's data */}
@@ -165,6 +183,7 @@ const RunnerSlot = ({ runner, slot, onSave, onClear }) => {
                 <button 
                   className="btn btn-outline-danger clear-btn" 
                   onClick={handleClear}
+                  disabled={saving}
                 >
                   <i className="fas fa-times me-1"></i> Clear
                 </button>

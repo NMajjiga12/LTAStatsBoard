@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-const fs = require('fs').promises;
 
 const app = express();
 const PORT = process.env.PORT || 5000;
@@ -10,6 +9,7 @@ app.use(express.json());
 
 // API Routes
 app.use('/api/runners', require('./routes/runners'));
+app.use('/api/commentators', require('./routes/commentators'));
 
 // Health check endpoint
 app.get('/api/health', (req, res) => {
@@ -36,8 +36,10 @@ app.listen(PORT, () => {
   console.log(`Server running on http://localhost:${PORT}`);
   console.log(`\nAvailable endpoints:`);
   console.log(`  - API: http://localhost:${PORT}/api/runners`);
+  console.log(`  - Commentators API: http://localhost:${PORT}/api/commentators`);
   console.log(`  - Health: http://localhost:${PORT}/api/health`);
   console.log(`  - OBS Runner: http://localhost:${PORT}/obs/:username`);
   console.log(`  - OBS Leaderboard: http://localhost:${PORT}/obs_leaderboard`);
+  console.log(`  - Commentator Displays: http://localhost:${PORT}/commentator/[1-3]`);
   console.log(`\nPress Ctrl+C to stop the server`);
 });

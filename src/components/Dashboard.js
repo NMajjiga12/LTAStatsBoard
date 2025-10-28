@@ -1,6 +1,7 @@
 // src/components/Dashboard.js
 import React from 'react';
 import RunnerManagement from './RunnerManagement';
+import CommentatorManagement from './CommentatorManagement';
 import OBSLinks from './OBSLinks';
 import Display from './Display';
 import FontSettings from './FontSettings';
@@ -9,9 +10,12 @@ const Dashboard = ({
   activeTab, 
   onTabChange, 
   runnerData, 
+  commentatorData,
   leaderboardData, 
   onSaveRunner, 
+  onSaveCommentator,
   onClearSlot,
+  onClearCommentatorSlot,
   onUpdateLeaderboard,
   fontSettings,
   onFontChange,
@@ -37,6 +41,13 @@ const Dashboard = ({
                 </button>
                 <button 
                   type="button" 
+                  className={`btn btn-outline-light ${activeTab === 'commentators' ? 'active' : ''}`}
+                  onClick={() => onTabChange('commentators')}
+                >
+                  <i className="fas fa-microphone me-1"></i> Commentators
+                </button>
+                <button 
+                  type="button" 
                   className={`btn btn-outline-light ${activeTab === 'obsLinks' ? 'active' : ''}`}
                   onClick={() => onTabChange('obsLinks')}
                 >
@@ -47,7 +58,15 @@ const Dashboard = ({
                   className={`btn btn-outline-light ${activeTab === 'display' ? 'active' : ''}`}
                   onClick={() => {
                     onTabChange('display');
-                    onUpdateLeaderboard();
+                    // Force immediate refresh of all data
+                    setTimeout(() => {
+                      onUpdateLeaderboard();
+                      // Trigger global refresh event
+                      const refreshEvent = new CustomEvent('runnerDataUpdated', { 
+                        detail: { timestamp: Date.now() }
+                      });
+                      window.dispatchEvent(refreshEvent);
+                    }, 100);
                   }}
                 >
                   <i className="fas fa-tv me-1"></i> Display
@@ -76,8 +95,19 @@ const Dashboard = ({
           />
         )}
 
+        {activeTab === 'commentators' && (
+          <CommentatorManagement 
+            commentatorData={commentatorData}
+            onSaveCommentator={onSaveCommentator}
+            onClearSlot={onClearCommentatorSlot}
+          />
+        )}
+
         {activeTab === 'obsLinks' && (
-          <OBSLinks runnerData={runnerData} />
+          <OBSLinks 
+            runnerData={runnerData}
+            commentatorData={commentatorData}
+          />
         )}
 
         {activeTab === 'display' && (
